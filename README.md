@@ -2,6 +2,10 @@
 
 A beginner-friendly Design and Analysis of Algorithms project that searches actual university student records from `data/students.xlsx` with a manually implemented iterative Binary Search.
 
+## Live Demo
+
+[Open FindMyRoll](https://findmyroll.up.railway.app)
+
 ## Problem Statement
 
 A university needs to retrieve a student record by roll number from a large, ordered collection. Checking every record one by one can require up to $n$ comparisons. This project demonstrates how Binary Search uses the sorted order to discard half of the remaining records after each comparison.

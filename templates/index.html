@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#12243b">
+  <title>FindMyRoll</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="FindMyRoll home">
+      <span class="brand-name">FindMyRoll</span>
+    </a>
+    <div class="project-tag"><span class="live-dot"></span> DAA PROJECT <span class="tag-divider">/</span> BINARY SEARCH</div>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">ACADEMIC RECORDS · SEARCH CONSOLE</p>
+        <h1>FindMyRoll</h1>
+        <p class="subtitle">Efficient Student Search using Binary Search</p>
+        <p class="data-source"><span>DATA SOURCE</span><strong id="source-name">D SEC UPDATED ID DATA.xlsx</strong></p>
+      </div>
+      <div class="index-status"><span class="status-pulse"></span><span>INDEX READY</span><strong id="index-count">-- records</strong></div>
+    </section>
+
+    <section class="stats-grid" aria-label="Search statistics">
+      <article class="stat-card stat-students"><div class="stat-top"><span class="stat-label">TOTAL STUDENTS</span><span class="stat-symbol">01</span></div><strong id="total-students">--</strong><span class="stat-foot">records indexed</span></article>
+      <article class="stat-card"><div class="stat-top"><span class="stat-label">TOTAL SEARCHES</span><span class="stat-symbol">02</span></div><strong id="total-searches">--</strong><span class="stat-foot">since server start</span></article>
+      <article class="stat-card"><div class="stat-top"><span class="stat-label">TOTAL OPERATIONS</span><span class="stat-symbol">03</span></div><strong id="total-operations">--</strong><span class="stat-foot">midpoints inspected</span></article>
+      <article class="stat-card stat-average"><div class="stat-top"><span class="stat-label">AVERAGE OPERATIONS</span><span class="stat-symbol">04</span></div><strong id="average-operations">--</strong><span class="stat-foot">per search</span></article>
+    </section>
+
+    <section class="workspace-grid">
+      <div class="main-column">
+        <section class="panel search-panel" aria-labelledby="search-title">
+          <div class="panel-heading">
+            <div><p class="section-kicker">LOOKUP</p><h2 id="search-title">Find a student</h2></div>
+            <span class="method-label">O(log n) <span>ITERATIVE</span></span>
+          </div>
+          <form id="search-form" class="search-form">
+            <label for="roll-input">Student roll number</label>
+            <div class="input-row">
+              <span class="input-prefix" aria-hidden="true">#</span>
+              <input id="roll-input" name="roll_no" type="text" autocomplete="off" placeholder="Enter a roll number" aria-describedby="search-error">
+              <button class="button button-primary" type="submit"><span>Search record</span><span class="button-arrow" aria-hidden="true">↗</span></button>
+              <button class="button button-quiet" id="clear-search" type="button">Clear</button>
+            </div>
+            <p class="form-note" id="search-error" role="alert" aria-live="polite">Enter a roll number from the Excel records.</p>
+          </form>
+          <div id="student-result" class="result-area" aria-live="polite">
+            <div class="empty-result"><span class="empty-mark">↳</span><span>Search a roll number to view the student record and comparison trace.</span></div>
+          </div>
+        </section>
+
+        <section class="panel trace-panel" aria-labelledby="trace-title">
+          <div class="panel-heading">
+            <div><p class="section-kicker">ALGORITHM TRACE</p><h2 id="trace-title">Binary search steps</h2></div>
+            <span class="operation-count" id="step-count">0 comparisons</span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table trace-table">
+              <thead><tr><th>STEP</th><th>LOW</th><th>MID</th><th>HIGH</th><th>MID ROLL</th><th>COMPARISON</th><th>DIRECTION</th></tr></thead>
+              <tbody id="steps-body"><tr class="table-empty"><td colspan="7">The midpoint checks will appear here after a search.</td></tr></tbody>
+            </table>
+          </div>
+          <div class="trace-footer"><span class="trace-legend"><i class="legend-dot found"></i> Match</span><span class="trace-legend"><i class="legend-dot narrowed"></i> Range narrowed</span><span id="trace-outcome">Waiting for a search</span></div>
+        </section>
+
+        <section class="panel batch-panel" aria-labelledby="batch-title">
+          <div class="panel-heading">
+            <div><p class="section-kicker">BATCH ANALYSIS</p><h2 id="batch-title">Compare multiple lookups</h2></div>
+            <span class="method-label">MULTI-SEARCH</span>
+          </div>
+          <form id="batch-form" class="batch-form">
+            <label for="batch-input">Roll numbers <span>Separate with commas, spaces, or new lines</span></label>
+            <div class="batch-controls"><textarea id="batch-input" rows="2" placeholder="Enter roll numbers from the workbook" aria-describedby="batch-error"></textarea><button class="button button-primary" type="submit">Run batch <span class="button-arrow" aria-hidden="true">↗</span></button></div>
+            <p class="form-note" id="batch-error" role="alert" aria-live="polite"></p>
+          </form>
+          <div class="batch-summary" id="batch-summary" hidden>
+            <span><strong id="batch-searches">0</strong> searches</span><span><strong id="batch-operations">0</strong> operations</span><span><strong id="batch-average">0</strong> average</span>
+          </div>
+          <div class="table-wrap batch-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>ROLL NUMBER</th><th>STUDENT NAME</th><th>RESULT</th><th>OPERATIONS</th></tr></thead>
+              <tbody id="batch-body"><tr class="table-empty"><td colspan="4">Batch results will appear here.</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <aside class="side-column">
+        <section class="panel chart-panel" aria-labelledby="chart-title">
+          <div class="panel-heading chart-heading"><div><p class="section-kicker">SEARCH PERFORMANCE</p><h2 id="chart-title">Operation count</h2></div><span class="chart-unit">COMPARISONS</span></div>
+          <div class="chart-wrap"><canvas id="performance-chart" aria-label="Binary search operations per searched roll number"></canvas><div class="chart-empty" id="chart-empty"><span>—</span><p>Your searches will be plotted here.</p></div></div>
+          <div class="chart-footer"><span><i class="chart-key"></i> Midpoints inspected</span><span id="chart-total">0 data points</span></div>
+        </section>
+
+        <section class="complexity-panel" aria-labelledby="complexity-title">
+          <div class="complexity-heading"><div><p class="section-kicker">ALGORITHM PROFILE</p><h2 id="complexity-title">Complexity</h2></div><span class="complexity-mark">f(n)</span></div>
+          <div class="complexity-list">
+            <div><span>Best case</span><code>O(1)</code></div>
+            <div><span>Average case</span><code>O(log n)</code></div>
+            <div><span>Worst case</span><code>O(log n)</code></div>
+            <div><span>Space · iterative</span><code>O(1)</code></div>
+          </div>
+          <p class="complexity-note">Each comparison discards half of the remaining sorted records.</p>
+        </section>
+
+        <section class="proof-panel" aria-label="Binary search demonstration">
+          <span class="proof-index">DAA / 01</span>
+          <p>At <strong id="proof-student-count">--</strong> records, one lookup needs at most <strong id="proof-max-operations">--</strong> midpoint checks.</p>
+          <span class="proof-scale"><i></i><i></i><i></i><i></i><i></i><i></i><span>Sorted Excel roll numbers · halved each step</span></span>
+        </section>
+      </aside>
+    </section>
+    <footer class="page-footer"><span>FINDMYROLL</span><span>DESIGN &amp; ANALYSIS OF ALGORITHMS <i></i> ITERATIVE BINARY SEARCH</span></footer>
+  </main>
+</body>
+</html>

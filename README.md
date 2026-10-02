@@ -78,13 +78,17 @@ On macOS or Linux, activate the environment with `source .venv/bin/activate` ins
 
 ## Run the Flask Application
 
+For local development, run:
+
 ```powershell
 python app.py
 ```
 
+For Render or another production WSGI server, run `gunicorn app:app`. The root `Procfile` contains this start command for Render.
+
 Open `http://127.0.0.1:5000` in a browser. Before Flask starts, the application reads `data/students.xlsx` with openpyxl, loads the first worksheet with pandas, and requires a non-empty worksheet with a unique, nonblank `ROLL NO` column. Roll numbers are preserved as trimmed strings and sorted with natural ordering. If the workbook is missing, empty, invalid, or has an incompatible schema, startup stops with an error instead of using substitute data.
 
-The current workspace copy of `data/students.xlsx` is 0 bytes, so it is not a valid workbook. Its sheet name and column labels cannot be inspected, and the application intentionally will not start until a valid Excel workbook replaces it. Once provided, `/api/stats` reports the actual sheet name and columns.
+The application reads the included workbook at startup and reports its actual sheet name and columns through `/api/stats`.
 
 ## API Endpoints
 
